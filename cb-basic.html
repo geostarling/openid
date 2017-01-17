@@ -28,9 +28,11 @@
 
     <!-- Used by validateSignature() -->
     <script type="text/javascript"
-            src="///crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+            src="///cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
     <script type="text/javascript"
-            src="///crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+            src="///cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"></script>
+    <script type="text/javascript"
+            src="///cdnjs.cloudflare.com/ajax/libs/jsrsasign/6.2.3/jsrsasign.js"></script>
 
     <script type="text/javascript" src="common.js"></script>
     <script type="text/javascript" src="basic.js"></script>
@@ -101,11 +103,19 @@
                         );
 
                         // Validate signature.
-                        var isValid = validateSignature(idToken[0], idToken[1], signature);
+                        $.ajax({
+                          url: server + openam + jwks_uri,
+                          type: "GET",
+                          accepts: "json"
+                        }).done(function (data) {
+
+                        var key = header.kid ? findKeyInJWKS(data, header.kid) : client_secret;
+                        
+                        var isValid = validateSignature(idToken[0], idToken[1], signature, header.alg, key);
                         if (!isValid) {
                             $("#info").html("Invalid id_token signature");
                             return;
-                        }
+                        }});
 
                         // Validate id_token.
                         // In 12, issuer path is /openam. In 13, issuer path is /openam/oauth2.

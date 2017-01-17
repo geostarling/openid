@@ -29,12 +29,18 @@ var openam        = "/openam";
 var authorize     = "/oauth2/authorize";
 var access        = "/oauth2/access_token";
 var info          = "/oauth2/userinfo";
+var jwks_uri      = "/oauth2/connect/jwk_uri?realm=/fo";
+
 
 // This application's URI, client_id, client_secret.
 var openid        = "/openid";
-var client_id     = "myClientID";
-var client_secret = "password";
-var client_realm  = "/";
+var client_id     = "sampleclient-openid-4e841c1c-0b4b-4ccc-a47e-fd2a7edb20bf";
+var client_secret = "b34666a8853242eeafdbb679f1a1cd83";
+//var client_id     = "liferay-lfrdevweb-614c7bb0-7837-4b53-9f63-f6c19aed2c43";
+//var client_secret = "e51b17769a384b8bb7127c4aa1c7f87d";
+
+var client_realm  = "/fo";
+
 
 // ...END CONFIGURATION
 
@@ -64,11 +70,16 @@ function parseQueryString() {
    https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-33#section-5.2
    cheating a bit by taking the pre-encoded header and payload.
  */
-function validateSignature(encodedHeader, encodedPayload, signature) {
-  var signingInput   = encodedHeader + "." + encodedPayload;
-  var signed         = CryptoJS.HmacSHA256(signingInput, client_secret);
-  var encodedSigned  = b64tob64u(signed.toString(CryptoJS.enc.Base64));
-  return encodedSigned == signature;
+function validateSignature(encodedHeader, encodedPayload, signature, alg, key) {
+  if (alg === 'RS256') {
+    var signKey = KEYUTIL.getKey(key);
+    return KJUR.jws.JWS.verifyJWT(encodedHeader + "." + encodedPayload + "." + signature, signKey, {alg: ["RS256"]});
+ } else {
+    var signingInput   = encodedHeader + "." + encodedPayload;
+    var signed         = CryptoJS.HmacSHA256(signingInput, key);
+    var encodedSigned  = b64tob64u(signed.toString(CryptoJS.enc.Base64));  
+    return encodedSigned == signature;
+  }
 }
 
 /* Returns a base64url-encoded version of the base64-encoded input string. */
@@ -78,4 +89,13 @@ function b64tob64u(string) {
     result = result.replace(/\//g, "_");
     result = result.replace(/=/g, "");
     return result;
+}
+
+function findKeyInJWKS(jwks, kid) {
+    for (var i = 0; i < jwks.keys.length; i++) {
+        if (jwks.keys[i].kid === kid) {
+            return jwks.keys[i];
+        }
+    }
+    return null;
 }
