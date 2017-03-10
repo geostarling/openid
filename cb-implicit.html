@@ -24,14 +24,17 @@
     <link rel="shortcut icon" href="http://forgerock.com/favicon.ico">
     <link type="text/css" rel="stylesheet" href="style.css">
     <script type="text/javascript"
-            src="///code.jquery.com/jquery-latest.min.js"></script>
+            src="jquery-latest.min.js"></script>
 
     <!-- Used by validateSignature() -->
     <script type="text/javascript"
-            src="///crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+            src="hmac-sha256.js"></script>
     <script type="text/javascript"
-            src="///crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+            src="enc-base64-min.js"></script>
+    <script type="text/javascript"
+            src="jsrsasign-latest-all-min.js"></script>
 
+    <script type="text/javascript" src="credentials.js"></script>
     <script type="text/javascript" src="common.js"></script>
     <script type="text/javascript" src="implicit.js"></script>
     <script type="text/javascript">
@@ -165,10 +168,6 @@
 </div>
 
 <h3>Implicit Client Profile Response Page</h3>
-
-<p>
-  Concerning signature validation, see <a href="common.js">common.js</a>.
-</p>
 
 <hr>
 
