@@ -79,7 +79,7 @@
                                         + "</pre>"
                         )
 
-			$("#logoutLink").attr('href',  server + openam + endSession + '?id_token_hint=' + data.id_token);
+			$("#logoutLink").attr('href',  server + openam + endSession + '?id_token_hint=' + data.id_token + "&post_logout_redirect_uri=" + encodeURIComponent(server + openid + "/logout.html") + "&state=" + state);
 
                         var idToken = data.id_token;
                         idToken = idToken.split(/\./);
