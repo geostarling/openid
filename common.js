@@ -30,6 +30,8 @@ var authorize     = "/oauth2/authorize";
 var access        = "/oauth2/access_token";
 var info          = "/oauth2/userinfo";
 var jwks_uri      = "/oauth2/connect/jwk_uri?realm=/fo";
+var endSession    = "/oauth2Ext/connect/slo/endSession";
+var logoutResponse = "/oauth2Ext/connect/slo/logoutResponse";
 
 
 // ...END CONFIGURATION

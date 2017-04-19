@@ -79,7 +79,7 @@
                                         + "</pre>"
                         )
 
-			$("#logoutLink").attr('href','https://idstestweb.cmss.local/auth/oauth2Ext/connect/slo/endSession?id_token_hint=' + data.id_token);
+			$("#logoutLink").attr('href',  server + openam + endSession + '?id_token_hint=' + data.id_token);
 
                         var idToken = data.id_token;
                         idToken = idToken.split(/\./);
